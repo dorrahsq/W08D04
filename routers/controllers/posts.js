@@ -42,7 +42,7 @@ const getOnePost = (req, res) => {
               commentresult.push({ likes: likesresult.length });
               commentresult.push(
                 likesresult.map((elem) => {
-                  return elem.by.email;
+                  return elem.by.username;
                 })
               );
 

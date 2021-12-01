@@ -34,14 +34,12 @@ const signUp = async (req, res) => {
 };
 
 const logIn = (req, res) => {
-  const { email, password } = req.body;
-  const saveEmail = email.toLowerCase();
-
+  const { email, password, username } = req.body;
   userModel
-    .findOne({ email: saveEmail })
+    .findOne({ $or: [{ email }, { username }] })
     .then(async (result) => {
       if (result) {
-        if (saveEmail == result.email) {
+        if ((email && email == result.email)  ||  (username && username == result.username)) { //////////////
           //unhash password
           const savePass = await bcrypt.compare(password, result.password); //compare return boolean
           if (savePass) {
