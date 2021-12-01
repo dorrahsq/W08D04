@@ -14,7 +14,7 @@ commentRouter.get("/all", authentication, getPostComment);
 commentRouter.post("/create", authentication, createComment);
 commentRouter.put("/update", authentication, updateComment);
 
-//user and post owner
+//user and post owner and admin
 commentRouter.delete("/delete", authentication, deleteComment);
 
 module.exports = commentRouter;
