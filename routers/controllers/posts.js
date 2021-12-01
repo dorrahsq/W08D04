@@ -18,7 +18,69 @@ const getUserPosts = (req, res) => {
 };
 
 //get post (with comment and likes )
+const getOnePost = (req, res) => {
+  const { _id } = req.body;
+  postsModel
+    .findById({ _id })
+    .then((result) => {
+      if (result.isDeleted) {
+        return res.json("this post already have been deleted");
+      }
+      likesModel
+        .find({ onPost: _id })
+        .populate("onPost")
+        .populate("by")
+        .exec()
+        .then((likesresult) => {
+          commentModel
+            .find({ onPost: _id })
+            .populate("onPost")
+            .populate("by")
+            .exec()
+            .then((commentresult) => {
+              commentresult.push({ likes: likesresult.length });
+              commentresult.push(
+                likesresult.map((elem) => {
+                  return elem.by.email;
+                })
+              );
+
+              res.json(commentresult);
+            });
+        });
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+};
+
 //post soft delete
+const archivePost = async (req, res) => {
+  const { _id } = req.body;
+  postsModel
+    .findById({ _id })
+    .then((result) => {
+      if (result) {
+        if (!result.isDeleted) {
+          postsModel.updateOne(
+            { _id },
+            { $set: { isDeleted: true } },
+            function (err) {
+              if (err) return handleError(err);
+            }
+          );
+
+          return res.status(200).json("done");
+        }
+        return res.json("this post already have been archived");
+      } else {
+        return res.status(404).json("post not found");
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
+};
 
 //create post
 const createPost = (req, res) => {
@@ -94,4 +156,6 @@ module.exports = {
   getUserPosts,
   deletePost,
   updatePost,
+  getOnePost,
+  archivePost,
 };

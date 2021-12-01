@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     },
   },
   username: { type: String, required: true },
+  isDeleted:{ type: Boolean, default:false} ,
   password: { type: String, required: true },
   role: { type: mongoose.Schema.Types.ObjectId, ref: "Role", required: true },
   img: {
@@ -21,4 +22,4 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("user", userSchema);

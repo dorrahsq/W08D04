@@ -1,5 +1,6 @@
 const userModel = require("./../../db/models/user");
 const taskModel = require("./../../db/models/task");
+const postsModel = require("../../db/models/posts");
 
 require("dotenv").config();
 
@@ -12,13 +13,14 @@ const bcrypt = require("bcrypt");
 const SALT = Number(process.env.SALT);
 
 const signUp = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { email, username, password, role } = req.body;
   const saveEmail = email.toLowerCase();
   const savePass = await bcrypt.hash(password, SALT);
 
   const newUser = new userModel({
     email: saveEmail,
     password: savePass,
+    username,
     role,
   });
 
@@ -74,24 +76,40 @@ const allUsers = async (req, res) => {
       res.status(400).json(err);
     });
 };
-//edge cassssssse
+
+//soft
 const deleteUser = async (req, res) => {
   const { _id } = req.body;
-  userModel.findById({ _id }).then((result) => {
-    console.log(result);
-    if (result) {
-      userModel.deleteOne({ _id }, function (err) {
-        if (err) return handleError(err);
-      });
-      taskModel.deleteMany({ user: _id }, function (err) {
-        if (err) return handleError(err);
-      });
+  userModel
+    .findById({ _id })
+    .then((result) => {
+      if (result) {
+        if (!result.isDeleted) {
+          userModel.updateOne(
+            { _id },
+            { $set: { isDeleted: true } },
+            function (err) {
+              if (err) return handleError(err);
+            }
+          );
+          postsModel.updateMany(
+            { postedBy: _id },
+            { $set: { isDeleted: true } },
+            function (err) {
+              if (err) return handleError(err);
+            }
+          );
 
-      res.status(200).json("done");
-    } else {
-      return res.status(404).json("user not found");
-    }
-  });
+          return res.status(200).json("done");
+        }
+        return res.json("this user already have been deleted");
+      } else {
+        return res.status(404).json("user not found");
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 module.exports = { signUp, logIn, allUsers, deleteUser };

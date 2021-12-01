@@ -11,10 +11,10 @@ const {
 } = require("./../controllers/user");
 
 userRouter.post("/create", signUp);
-userRouter.post("/log", logIn); // post for security -- post is more secure than get
+userRouter.post("/log", logIn);
 
 //just admin
 userRouter.get("/", authentication, authorization, allUsers);
-userRouter.delete("/", authentication, authorization, deleteUser);
+userRouter.delete("/delete", authentication, authorization, deleteUser);
 
 module.exports = userRouter;
