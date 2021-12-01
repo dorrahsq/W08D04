@@ -1,5 +1,4 @@
 const userModel = require("./../../db/models/user");
-const taskModel = require("./../../db/models/task");
 const postsModel = require("../../db/models/posts");
 
 require("dotenv").config();
@@ -48,6 +47,7 @@ const logIn = (req, res) => {
           if (savePass) {
             const payload = {
               role: result.role,
+              id: result._id,
             };
             const token = await jwt.sign(payload, SECRETKEY); //options
             res.status(200).json({ result, token });
