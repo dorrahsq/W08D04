@@ -21,5 +21,9 @@
 - bcrypt
 - jsonwebtoken
 
+## ER diagram
+![Untitled Diagram drawio-2](https://user-images.githubusercontent.com/92247950/145240536-371b9a12-ed54-4afc-9d24-07c33c63fb76.png)
+
+
 ## UML diagram
 ![Untitled Diagram drawio](https://user-images.githubusercontent.com/92247950/145237871-9bbf654e-9416-4d0e-ab55-48c415bd8119.png)
