@@ -22,4 +22,4 @@
 - jsonwebtoken
 
 ## UML diagram
-![soc-UML drawio](https://user-images.githubusercontent.com/92247950/145237348-6080565b-3bd1-4e43-8139-5678467a7f04.png)
+![Untitled Diagram drawio](https://user-images.githubusercontent.com/92247950/145237871-9bbf654e-9416-4d0e-ab55-48c415bd8119.png)
