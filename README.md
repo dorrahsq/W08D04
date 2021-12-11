@@ -15,7 +15,8 @@
 
 
 ## UML diagram
-![Untitled Diagram drawio](https://user-images.githubusercontent.com/92247950/145237871-9bbf654e-9416-4d0e-ab55-48c415bd8119.png)
+![Untitled Diagram drawio-6](https://user-images.githubusercontent.com/92247950/145677758-4864adcc-4b46-4666-8cdb-7367d2bd5269.png)
+
 
 ## Models
 #### - Role model 
