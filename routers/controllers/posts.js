@@ -3,9 +3,20 @@ const likesModel = require("../../db/models/like");
 const commentModel = require("../../db/models/comment");
 const roleModel = require("./../../db/models/role");
 
+const getAllPosts = (req, res) => {
+  postsModel
+    .find({})
+    .sort({ date: -1 })
+    .populate("postedBy")
+    .exec(function (err, posts) {
+      if (err) return handleError(err);
+      res.json(posts);
+    });
+};
+
 //get all posts for one user
 const getUserPosts = (req, res) => {
-  const { postedBy } = req.query;
+  const { postedBy } = req.params;
   postsModel
     .find({})
     .populate("postedBy")
@@ -20,13 +31,16 @@ const getUserPosts = (req, res) => {
 
 //get post (with comment and likes )
 const getOnePost = (req, res) => {
-  const { _id } = req.body;
+  const { _id } = req.params;
   postsModel
     .findById({ _id })
+    .populate("postedBy")
     .then((result) => {
+      console.log(result);
       if (result.isDeleted) {
-        return res.json("this post already have been deleted");
+        return res.status(201).json("this post already have been deleted");
       }
+      finalResult = [];
       likesModel
         .find({ onPost: _id })
         .populate("onPost")
@@ -39,14 +53,28 @@ const getOnePost = (req, res) => {
             .populate("by")
             .exec()
             .then((commentresult) => {
-              commentresult.push({ likes: likesresult.length });
-              commentresult.push(
-                likesresult.map((elem) => {
-                  return elem.by.username;
+              finalResult.push({
+                describe: result.describe,
+                img: result.img,
+                _id: result._id,
+                date: result.date,
+                postedBy: result.postedBy,
+              });
+              finalResult.push({ likes: likesresult.length });
+              finalResult.push(
+                commentresult.map((elem) => {
+                  console.log(elem);
+                  return {
+                    title: elem.title,
+                    by: elem.by.username,
+                    _id: elem.by._id,
+                    commentId: elem._id,
+                    img: elem.by.img,
+                  };
                 })
               );
 
-              res.json(commentresult);
+              res.json(finalResult);
             });
         });
     })
@@ -57,7 +85,7 @@ const getOnePost = (req, res) => {
 
 //create post
 const createPost = (req, res) => {
-  const { img, describe, postedBy } = req.body;
+  const { img, describe, postedBy } = req.body; // postedBy: req.token.id ?
   const post = new postsModel({
     img,
     describe,
@@ -76,12 +104,15 @@ const createPost = (req, res) => {
 
 //delete post
 const deletePost = async (req, res) => {
+  console.log("here is delete");
   const reqUserId = req.token.id;
   const userId = req.token.role;
   const Result = await roleModel.findById(userId);
 
-  const { _id } = req.body; //_id: post id
-  postsModel.findById({ _id }).then((result) => {
+  const { _id } = req.params; //_id: post id\
+  console.log(_id, "iddd");
+  postsModel.findOne({ _id }).then((result) => {
+    console.log(result);
     if (result.postedBy == reqUserId || Result.role === "admin") {
       postsModel.deleteOne({ _id }, function (err, result2) {
         if (result2.deletedCount !== 0) {
@@ -177,6 +208,7 @@ const updatePost = (req, res) => {
 };
 
 module.exports = {
+  getAllPosts, //-----------------
   createPost,
   getUserPosts,
   deletePost,

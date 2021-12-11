@@ -3,7 +3,7 @@ const roleModel = require("./../../db/models/role");
 
 //comment
 const createComment = (req, res) => {
-  const { title, by, onPost } = req.body;
+  const { title, by, onPost } = req.body; // by: req.token.id ?
   const comment = new commentModel({
     title,
     by,
@@ -23,7 +23,7 @@ const createComment = (req, res) => {
 //delete comment
 //user and post owner and admin
 const deleteComment = async (req, res) => {
-  const { _id } = req.body;
+  const { _id } = req.params;
   const reqUserId = req.token.id; //user
   const userId = req.token.role;
   const Result = await roleModel.findById(userId); //admin -- Result.role =="adimn"
