@@ -1,5 +1,8 @@
 const userModel = require("./../../db/models/user");
 const postsModel = require("../../db/models/posts");
+const commentModel = require("../../db/models/comment");
+const likeModel = require("../../db/models/like");
+
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
 const { OAuth2Client } = require("google-auth-library");
@@ -251,6 +254,9 @@ const logIn = (req, res) => {
     .findOne({ $or: [{ email: newInput }, { username: newInput }] })
     .then(async (result) => {
       if (result) {
+        if (result.isDeleted) {
+          return res.status(203).json("your account has been deleted");
+        }
         //unhash password
         const savePass = await bcrypt.compare(password, result.password); //compare return boolean
         if (savePass) {
@@ -267,7 +273,7 @@ const logIn = (req, res) => {
           res.status(206).json("invalid email or password");
         }
       } else {
-        res.status(404).json("not found");
+        res.status(206).json("invalid email or password");
       }
     })
     .catch((err) => {
@@ -321,6 +327,12 @@ const deleteUser = async (req, res) => {
               if (err) return handleError(err);
             }
           );
+          commentModel.deleteMany({ by: _id }, function (err) {
+            if (err) return handleError(err);
+          });
+          likeModel.deleteMany({ by: _id }, function (err) {
+            if (err) return handleError(err);
+          });
 
           return res.status(200).json("done");
         }

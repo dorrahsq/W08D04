@@ -13,9 +13,9 @@ const {
 
 const postsRouter = express.Router();
 
-postsRouter.get("/", authentication, getAllPosts); //--------------------
+postsRouter.get("/", authentication, getAllPosts);
 postsRouter.get("/userPost/:postedBy", authentication, getUserPosts);
-postsRouter.get("/onePost/:_id", authentication, getOnePost); //---------
+postsRouter.get("/onePost/:_id", authentication, getOnePost); 
 postsRouter.post("/create", authentication, createPost);
 postsRouter.put("/archivePost/:_id", authentication, archivePost);
 postsRouter.put("/update", authentication, updatePost);

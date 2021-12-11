@@ -5,7 +5,7 @@ const roleModel = require("./../../db/models/role");
 
 const getAllPosts = (req, res) => {
   postsModel
-    .find({})
+    .find({isDeleted:false})
     .sort({ date: -1 })
     .populate("postedBy")
     .exec(function (err, posts) {
