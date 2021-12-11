@@ -5,11 +5,7 @@ const postSchema = new mongoose.Schema({
   isDeleted: { type: Boolean, default: false },
   date: { type: Date, default: new Date() },
   describe: { type: String, required: true },
-  postedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-    required: true,
-  },
+  postedBy: {type: mongoose.Schema.Types.ObjectId, ref: "user", required: true},
 });
 
 module.exports = mongoose.model("post", postSchema);

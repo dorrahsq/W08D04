@@ -17,7 +17,7 @@ postsRouter.get("/", authentication, getAllPosts); //--------------------
 postsRouter.get("/userPost/:postedBy", authentication, getUserPosts);
 postsRouter.get("/onePost/:_id", authentication, getOnePost); //---------
 postsRouter.post("/create", authentication, createPost);
-postsRouter.delete("/archivePost/:_id", authentication, archivePost);
+postsRouter.put("/archivePost/:_id", authentication, archivePost);
 postsRouter.put("/update", authentication, updatePost);
 
 //owner and admin
