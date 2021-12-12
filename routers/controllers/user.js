@@ -362,9 +362,8 @@ const googlelogin = (req, res) => {
             return res.status(400).json("somthing went wrong...");
           } else {
             if (user) {
-              const token = jwt.sign({ _id: user._id }, SECRETKEY);
+              const token = jwt.sign({ id: user._id , role: user.role }, SECRETKEY);
               const { _id, username, email, role } = user;
-              console.log(token, _id, email, "backkkkk to front ");
               res
                 .status(200)
                 .json({ token, user: { _id, username, email, role } });
@@ -377,9 +376,9 @@ const googlelogin = (req, res) => {
               });
 
               newUser.save().then((result) => {
-                const token = jwt.sign({ _id: result._id }, SECRETKEY);
-                const { _id, name, email } = newUser;
-                res.json({ token, user: { _id, name, email } });
+                const token = jwt.sign({ id: result._id }, SECRETKEY);
+                const { _id, username, email } = newUser;
+                res.json({ token, user: { _id, username, email } });
               });
             }
           }
