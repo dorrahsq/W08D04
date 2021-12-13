@@ -135,7 +135,7 @@ const confirmEmail = (req, res) => {
               else {
                 return res
                   .status(200)
-                  .send("Your account has been successfully verified");
+                  .send(`Your account has been successfully verified <a href="https://socialmedia-website.netlify.app">Back to log in</a>`);
               }
             });
           }
