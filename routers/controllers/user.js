@@ -177,14 +177,14 @@ const ForgetPassword = (req, res) => {
         "Hello " +
         user.username +
         ",\n\n" +
-        "Please reset your password by this code:" +
+        "Please reset your password by using the following code  :" +
         ",\n\n" +
-        token +
+        token + //splice
         "\n\nThank You!\n",
     };
     //        token.slice(token.length - 10) +
 
-    return user.updateOne({ resetLink: token }, (err, result) => {
+    return user.updateOne({ resetLink: token }, (err, result) => { //splice
       if (err) {
         return res.status(400).send("rest password link error");
       } else {
@@ -210,15 +210,14 @@ const resetPassword = (req, res) => {
   ) {
     if (resetLink) {
       jwt.verify(
-        resetLink,
+        resetLink, //splice
         process.env.RESET_PASSWORD_KEY,
         async (err, result) => {
           if (err) {
             return res.status(201).json("token error");
           }
-
           const savePass = await bcrypt.hash(newPassword, SALT);
-          userModel.findOne({ resetLink }, (err, user) => {
+          userModel.findOne({ resetLink }, (err, user) => { //splice
             if (err || !user) {
               return res
                 .status(201)
