@@ -9,6 +9,7 @@ const {
   updatePost,
   archivePost,
   getOnePost,
+  updatePostImg
 } = require("./../controllers/posts");
 
 const postsRouter = express.Router();
@@ -19,6 +20,7 @@ postsRouter.get("/onePost/:_id", authentication, getOnePost);
 postsRouter.post("/create", authentication, createPost);
 postsRouter.put("/archivePost/:_id", authentication, archivePost);
 postsRouter.put("/update", authentication, updatePost);
+postsRouter.put("/updateImg", authentication, updatePostImg);
 
 //owner and admin
 postsRouter.delete("/delete/:_id", authentication, deletePost);

@@ -5,7 +5,7 @@ const roleModel = require("./../../db/models/role");
 
 const getAllPosts = (req, res) => {
   postsModel
-    .find({isDeleted:false})
+    .find({ isDeleted: false })
     .sort({ date: -1 })
     .populate("postedBy")
     .exec(function (err, posts) {
@@ -36,7 +36,6 @@ const getOnePost = (req, res) => {
     .findById({ _id })
     .populate("postedBy")
     .then((result) => {
-      console.log(result);
       if (result.isDeleted) {
         return res.status(201).json("this post already have been deleted");
       }
@@ -63,7 +62,6 @@ const getOnePost = (req, res) => {
               finalResult.push({ likes: likesresult.length });
               finalResult.push(
                 commentresult.map((elem) => {
-                  console.log(elem);
                   return {
                     title: elem.title,
                     by: elem.by.username,
@@ -104,15 +102,12 @@ const createPost = (req, res) => {
 
 //delete post
 const deletePost = async (req, res) => {
-  console.log("here is delete");
   const reqUserId = req.token.id;
   const userId = req.token.role;
   const Result = await roleModel.findById(userId);
 
   const { _id } = req.params; //_id: post id\
-  console.log(_id, "iddd");
   postsModel.findOne({ _id }).then((result) => {
-    console.log(result);
     if (result.postedBy == reqUserId || Result.role === "admin") {
       postsModel.deleteOne({ _id }, function (err, result2) {
         if (result2.deletedCount !== 0) {
@@ -173,8 +168,6 @@ const updatePost = (req, res) => {
   const reqUserId = req.token.id;
   //get user id by post id
   postsModel.findById({ _id }).then((result) => {
-    console.log(result);
-
     if (result.postedBy == reqUserId) {
       if (result.isDeleted == true) {
         return res.json(
@@ -207,6 +200,17 @@ const updatePost = (req, res) => {
   });
 };
 
+const updatePostImg = (req, res) => {
+  const { _id, newImg } = req.body; //_id: post id
+
+  postsModel
+    .findOneAndUpdate({ _id }, { img: newImg }, { new: true })
+    .then(async (result) => {
+      console.log(result);
+      res.status(200).json(result);
+    });
+};
+
 module.exports = {
   getAllPosts, //-----------------
   createPost,
@@ -215,4 +219,5 @@ module.exports = {
   updatePost,
   getOnePost,
   archivePost,
+  updatePostImg,
 };

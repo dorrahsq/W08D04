@@ -177,7 +177,7 @@ const ForgetPassword = (req, res) => {
         "Hello " +
         user.username +
         ",\n\n" +
-        "Please reset your password by using the following code  :" +
+        "Please reset your password by using the following code  : " +
         ",\n\n" +
         token + //splice
         "\n\nThank You!\n",
